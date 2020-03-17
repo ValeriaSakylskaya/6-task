@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><archive>
+    <students>
+        <student Specialization="mechanic" id="1" nameStudent="Pavel"/>
+        <student Specialization="economy" id="2" nameStudent="Ira"/>
+        <student Specialization="economy" id="3" nameStudent="Mary"/>
+    </students>
+</archive>

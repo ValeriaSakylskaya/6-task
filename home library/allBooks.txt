@@ -1,0 +1,10 @@
+1;Lev Tolstoy;Voyna i mir;Paper;qwe
+2;Dzhordzh Oru­ell;1984;Paper;nice book;
+3;Dzheyms Dzhoys;Uliss;Electronic;nice book;
+4;Vladimir Nabokov;Lolita;Paper;nice book;
+5;Uil'yam Folkner;Shum i yarost';Electronic;nice book;
+6;Ral'f Ellison;Nevidimka;Electronic;nice book;
+7;Virdzhiniya Vul'f;K mayaku;Electronic;nice book;
+8;Gomer;Illiada i Odisseya;Paper;nice book;
+9;Dzheyn Ostin;Gordost' i predubezhdeniye;Paper;nice book;
+10;Dante Alig'yeri;Bozhe­stven­naya kome­diya;Electronic;nice book;

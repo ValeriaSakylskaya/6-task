@@ -1,0 +1,13 @@
+port/Server/out/
+archive/Client/out/
+home library/out/
+notebook/out/
+port/Server/.idea/
+home library/.idea/
+archive/Client/.idea/
+archive/.idea/
+*.kotlin_module
+archive/out/production/archive/Modules/FileStudent.class
+notebook/.idea/
+port/.idea/
+archive/out/
