@@ -1,33 +1,36 @@
 package Models;
+
 import Enums.*;
+
 public class User {
-    private String Login;
-    private String Pass;
-    private String Salt;
-    private String Email;
+    private String login;
+    private String password;
+    private String salt;
+    private String email;
     private Role role;
-    public User (String login, String pass, String salt, String email, Role role){
-        this.Login = login;
-        this.Pass = pass;
-        this.Email = email;
+
+    public User(String login, String password, String salt, String email, Role role) {
+        this.login = login;
+        this.password = password;
+        this.email = email;
         this.role = role;
-        this.Salt = salt;
+        this.salt = salt;
     }
 
     public String getLogin() {
-        return Login;
+        return login;
     }
 
-    public String getPass() {
-        return Pass;
+    public String getPassword() {
+        return password;
     }
 
     public String getSalt() {
-        return Salt;
+        return salt;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     public Role getRole() {

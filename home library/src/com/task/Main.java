@@ -1,91 +1,55 @@
 package com.task;
 
 import Enums.Role;
+import Services.Actions;
 import Services.BookService;
 import Services.UserService;
 
 import java.util.Scanner;
 
 public class Main {
-
+    /*Задание 1: создать консольное приложение “Учет книг в домашней библиотеке”.
+    Общие требования к заданию:
+    • Система учитывает книги как в электронном, так и в бумажном варианте.
+    • Существующие роли: пользователь, администратор.
+    • Пользователь может просматривать книги в каталоге книг, осуществлять поиск
+    книг в каталоге.
+    • Администратор может модифицировать каталог.
+    • *При добавлении описания книги в каталог оповещение о ней рассылается на
+    e-mail всем пользователям
+    • **При просмотре каталога желательно реализовать постраничный просмотр
+    • ***Пользователь может предложить добавить книгу в библиотеку, переслав её
+    администратору на e-mail.
+    • Каталог книг хранится в текстовом файле.
+    • Данные аутентификации пользователей хранятся в текстовом файле. Пароль
+    не хранится в открытом виде*/
     public static void main(String[] args) {
         String Login;
         String Pass;
         String newTitle;
         String newAuthor;
         int idBook;
+        int action;
         String newDescription;
         Scanner input = new Scanner(System.in);
-
-
-        System.out.println("login");
-        Login = input.nextLine();
-        System.out.println("pass");
-        Pass = input.nextLine();
+        Actions actions = new Actions();
         UserService userService = new UserService();
-        userService.authenticationUser(Login, Pass);
+        userService.loadUsers();
+        userService.login();
         BookService bookService = new BookService();
+        bookService.loadBooks();
         if (userService.getRole(Login, Pass) == Role.User) {
             System.out.println("Hello, you can choose the following actions: ");
             System.out.println("1 - browse books 2 - search for books, 3 - suggest add books ");
-            switch (Integer.parseInt(input.nextLine())) {
-                case (1):
-                    bookService.viewBooks();
-                    break;
-                case (2):
-                    System.out.println("enter the author");
-                    bookService.searchBook(input.nextLine());
-                    break;
-                case (3):
-                    System.out.println("enter the info by book");
-                    userService.sendToAdmin(input.nextLine());
-                    break;
-                default:
-                    System.out.println("enter the 1, 2 or 3.");
-                    break;
-            }
+            action = Integer.parseInt(input.nextLine());
+            actions.runActionsForUser(action);
+            input.close();
         }
         if (userService.getRole(Login, Pass) == Role.Admin) {
             System.out.println("Hello, you can choose the following actions: ");
             System.out.println("1 - browse books 2 - search for books,  3 - catalog modification");
-            switch (Integer.parseInt(input.nextLine())) {
-                case (1):
-                    bookService.viewBooks();
-                    break;
-                case (2):
-                    System.out.println("enter the author");
-                    bookService.searchBook(input.nextLine());
-                    break;
-                case (3):
-                    System.out.println("1 - change author 2 - change book title  3 - change book description");
-                    switch (Integer.parseInt(input.nextLine())) {
-                        case (1):
-                            System.out.println("enter the id book ");
-                            idBook = Integer.parseInt(input.nextLine());
-                            System.out.println("enter new author");
-                            newAuthor = input.nextLine();
-                            bookService.changeBookAuthor(newAuthor, idBook);
-                            break;
-                        case (2):
-                            System.out.println("enter the id book ");
-                            idBook = Integer.parseInt(input.nextLine());
-                            System.out.println("enter new title");
-                            newTitle = input.nextLine();
-                            bookService.changeBookTitle(newTitle, idBook);
-                            break;
-                        case (3):
-                            System.out.println("enter the id book ");
-                            idBook = Integer.parseInt(input.nextLine());
-                            System.out.println("enter new description");
-                            newDescription = input.nextLine();
-                            bookService.changeBookDescription(newDescription, idBook);
-                            break;
-                        default:
-                            System.out.println("enter the 1, 2 or 3.");
-                            break;
-                    }
-            }
-
+            action = Integer.parseInt(input.nextLine());
+            actions.runActionsForAdmin(action);
             input.close();
         }
     }

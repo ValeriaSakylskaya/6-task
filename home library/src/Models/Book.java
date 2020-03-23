@@ -1,12 +1,15 @@
 package Models;
+
 import Enums.TypeOfBookCarrier;
+
 public class Book {
     private String Name;
     private String Author;
     private TypeOfBookCarrier TypeOfBookCarrier;
     private String Description;
     private int ID;
-    public Book(int id, String name, String author, TypeOfBookCarrier typeOfBookCarrier, String description){
+
+    public Book(int id, String name, String author, TypeOfBookCarrier typeOfBookCarrier, String description) {
         this.Author = author;
         this.Name = name;
         this.TypeOfBookCarrier = typeOfBookCarrier;
@@ -47,7 +50,7 @@ public class Book {
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         return "Book " + Name + " Author " + Author + " carrier " + TypeOfBookCarrier + " " + Description;
     }
 }

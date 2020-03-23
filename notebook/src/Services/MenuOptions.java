@@ -6,7 +6,9 @@ public class MenuOptions {
     private NoteService noteService = new NoteService();
     private Scanner input = new Scanner(System.in);
     private int Answer;
+
     public MenuOptions (int answer) {
+        noteService.loadNotes();
         switch (answer){
             case 1:
                 noteService.viewNotes();
@@ -31,15 +33,15 @@ public class MenuOptions {
         switch (Answer){
             case 1:
                 System.out.println("enter the email");
-                noteService.FindNotesByEmail(input.nextLine());
+                noteService.findNotesByEmail(input.nextLine());
                 break;
             case 2:
                 System.out.println("enter the theme");
-                noteService.FindNotesByTheme(input.nextLine());
+                noteService.findNotesByTheme(input.nextLine());
                 break;
             case 3:
                 System.out.println("enter the date");
-                noteService.FindNotesByDate(input.nextLine());
+                noteService.findNotesByDate(input.nextLine());
                 break;
             case 4:
                 String date, theme;
@@ -47,12 +49,12 @@ public class MenuOptions {
                 date = input.nextLine();
                 System.out.println("enter the theme");
                 theme = input.nextLine();
-                noteService.FindNotesByDateAndTheme(date,theme);
+                noteService.findNotesByDateAndTheme(date,theme);
                 break;
         }
     }
     private void searchBySpecificWord(){
        System.out.println("enter the word");
-       noteService.FindNotesByText(input.nextLine());
+       noteService.findNotesByText(input.nextLine());
     }
 }
