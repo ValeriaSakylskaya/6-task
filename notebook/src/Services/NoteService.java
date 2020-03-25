@@ -11,17 +11,17 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class NoteService {
-    private List<Note> notes = new ArrayList<Note>();
-    private final String path = "notes.txt";
-    private DateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-    private Scanner input = new Scanner(System.in);
-    private Validation validation = new Validation();
+    private static List<Note> notes = new ArrayList<Note>();
+    private static final String path = "notes.txt";
+    private static DateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+    private static Scanner input = new Scanner(System.in);
+    private static Validation validation = new Validation();
 
     public NoteService() {
 
     }
 
-    public void loadNotes() {
+    public static void loadNotes() {
         String line;
         String[] subLine;
         try {
@@ -43,7 +43,7 @@ public class NoteService {
         }
     }
 
-    public void saveNotes() {
+    public static void saveNotes() {
         String saveModel = mapToServerModel();
         try (FileWriter writer = new FileWriter(path, false)) {
             writer.write(saveModel);
@@ -54,23 +54,23 @@ public class NoteService {
 
     }
 
-    private String mapToServerModel() {
+    private static String mapToServerModel() {
         StringBuilder builder = new StringBuilder();
         String string;
         for (Note note : notes) {
-            string = note.getId() + ";" + note.getTheme() + ";" + format.format(note.getCreatedAt()) + ";" + note.getEmail() + ";" + note.getMessage() + "\n";
+            string = note.getId() + ";" + note.getTheme() + ";" + format.format(note.getCreatedDate()) + ";" + note.getEmail() + ";" + note.getMessage() + "\n";
             builder.append(string);
         }
         return builder.toString();
     }
 
-    public void viewNotes() {
+    public static void viewNotes() {
         for (Note note : notes) {
             System.out.println(note);
         }
     }
 
-    public void addNote() {
+    public static void addNote() {
         int Id;
         String Theme;
         Date dateNow = new Date();
@@ -93,7 +93,7 @@ public class NoteService {
 
     }
 
-    public void findNotesByText(String rex) {
+    public static void findNotesByText(String rex) {
         List<Note> findNotes = new ArrayList<Note>();
         for (Note note : notes) {
             if (validation.searchForMatchesInTheText(note.getMessage(), rex) == true)
@@ -106,11 +106,11 @@ public class NoteService {
         }
     }
 
-    public void findNotesByDate(String date) {
+    public static void findNotesByDate(String date) {
         List<Note> findNotes = new ArrayList<Note>();
         if (validation.dataValidator(date)) {
             for (Note note : notes) {
-                if (validation.searchForMatchesInTheText(format.format(note.getCreatedAt()), date) == true)
+                if (validation.searchForMatchesInTheText(format.format(note.getCreatedDate()), date) == true)
                     findNotes.add(note);
             }
             sortByTheme(findNotes);
@@ -123,11 +123,11 @@ public class NoteService {
         }
     }
 
-    public void findNotesByDateAndTheme(String date, String theme) {
+    public static void findNotesByDateAndTheme(String date, String theme) {
         List<Note> findNotes = new ArrayList<Note>();
         if (validation.dataValidator(date)) {
             for (Note note : notes) {
-                if (validation.searchForMatchesInTheText(format.format(note.getCreatedAt()), date) == true && validation.searchForMatchesInTheText(note.getTheme(), theme) == true)
+                if (validation.searchForMatchesInTheText(format.format(note.getCreatedDate()), date) == true && validation.searchForMatchesInTheText(note.getTheme(), theme) == true)
                     findNotes.add(note);
             }
             sortByTheme(findNotes);
@@ -140,7 +140,7 @@ public class NoteService {
         }
     }
 
-    public void findNotesByTheme(String theme) {
+    public static void findNotesByTheme(String theme) {
         List<Note> findNotes = new ArrayList<Note>();
         for (Note note : notes) {
             if (validation.searchForMatchesInTheText(note.getTheme(), theme) == true)
@@ -153,7 +153,7 @@ public class NoteService {
         }
     }
 
-    public void findNotesByEmail(String email) {
+    public static void findNotesByEmail(String email) {
         List<Note> findNotes = new ArrayList<Note>();
         if (validation.emailValidator(email)) {
             for (Note note : notes) {
@@ -170,18 +170,15 @@ public class NoteService {
         }
     }
 
-    private void sortByTheme(List<Note> sortNotes) {
-        Collections.sort(sortNotes, new Comparator<Note>() {
-            @Override
-            public int compare(Note z1, Note z2) {
-                String s1 = z1.getTheme();
-                String s2 = z2.getTheme();
-                return s1.compareToIgnoreCase(s2);
-            }
+    private static void sortByTheme(List<Note> notes) {
+        Collections.sort(notes, (firstNote, secondNote) -> {
+            String firstNoteTheme = firstNote.getTheme();
+            String secondNoteTheme = secondNote.getTheme();
+            return firstNoteTheme.compareToIgnoreCase(secondNoteTheme);
         });
     }
 
-    static private class Validation {
+    private static class Validation {
         private Pattern pattern;
         private Matcher matcher;
 

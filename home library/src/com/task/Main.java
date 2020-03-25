@@ -1,7 +1,5 @@
 package com.task;
 
-import Enums.Role;
-import Services.Actions;
 import Services.BookService;
 import Services.UserService;
 
@@ -24,33 +22,12 @@ public class Main {
     • Данные аутентификации пользователей хранятся в текстовом файле. Пароль
     не хранится в открытом виде*/
     public static void main(String[] args) {
-        String Login;
-        String Pass;
-        String newTitle;
-        String newAuthor;
-        int idBook;
-        int action;
-        String newDescription;
         Scanner input = new Scanner(System.in);
-        Actions actions = new Actions();
         UserService userService = new UserService();
-        userService.loadUsers();
-        userService.login();
         BookService bookService = new BookService();
+
+        userService.login();
         bookService.loadBooks();
-        if (userService.getRole(Login, Pass) == Role.User) {
-            System.out.println("Hello, you can choose the following actions: ");
-            System.out.println("1 - browse books 2 - search for books, 3 - suggest add books ");
-            action = Integer.parseInt(input.nextLine());
-            actions.runActionsForUser(action);
-            input.close();
-        }
-        if (userService.getRole(Login, Pass) == Role.Admin) {
-            System.out.println("Hello, you can choose the following actions: ");
-            System.out.println("1 - browse books 2 - search for books,  3 - catalog modification");
-            action = Integer.parseInt(input.nextLine());
-            actions.runActionsForAdmin(action);
-            input.close();
-        }
+        userService.renderMenu(input);
     }
 }

@@ -1,6 +1,6 @@
 package Server;
 
-import Service.FileStudentService;
+import Service.StudentService;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -15,73 +15,91 @@ public class Server {
     private static ServerSocket server; // серверсокет
     private static BufferedReader in; // поток чтения из сокета
     private static BufferedWriter out; // поток записи в сокет
-    private FileStudentService fileStudentService = new FileStudentService();
+    private StudentService studentService = new StudentService();
     private String answer;
-    private int Id;
-    private String Name;
-    private String Specialization;
+    private int studentId;
+    private String studentName;
+    private String studentSpecialization;
+    private final int VIEW_STUDENT_INFO_BY_ID = 1;
+    private final int CHANGE_STUDENT_SPECIALIZATION = 2;
+    private final int ADD_NEW_STUDENT = 3;
 
     public Server() throws IOException, ParserConfigurationException, SAXException {
-        try {
-            try {
-                server = new ServerSocket(4004); // серверсокет прослушивает порт 4004
-                System.out.println("Сервер запущен!");
-                clientSocket = server.accept();
-                try {
-                    in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                    out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
-                    out.write("Hi, this is Server! Choose what you want to do 1 - view the case 2 - make changes 3 - add a new case: "  + "\n");
-                    out.flush();
-                    boolean done = false;
-                    while(!done) {
-                        int messageType = in.read();
-                        switch(messageType) {
-                            case 1:
-                                Id = in.read();
-                                answer = fileStudentService.viewStudentById(Id);
-                                out.write(answer +  "\n");
-                                out.flush();
-                                break;
-                            case 2:
-                                 Id = in.read();
-                                answer = fileStudentService.viewStudentById(Id);
-                                out.write(answer +  "\n");
-                                out.flush();
-                               Specialization = in.readLine();
-                                fileStudentService.changeSpecialization(String.valueOf(Id), Specialization);
-                               out.write("data changed"+  "\n");
-                               out.flush();
-                                break;
-                            case 3:
-                               String Idd = in.readLine();
-                                System.out.println(Idd);
-                                 Name = in.readLine();
-                                System.out.println(Name);
-                             //   Specialization = in.readLine();
-                             //   System.out.println(Specialization);
-                            //    fileStudentService.addNewStudent(String.valueOf(Id),Name, Specialization);
-                               out.write("data changed"+  "\n");
-                             out.flush();
-                                break;
-                            default:
-                                done = true;
+        server = new ServerSocket(4004);
+    }
 
-                        }
+    public void runServer() throws IOException {
+        try {
+            System.out.println("Сервер запущен!");
+            studentService.loadFromXml();
+            clientSocket = server.accept();
+            try {
+                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+                out.write("Hi, this is Server! Choose what you want to do 1 - view the case 2 - make changes 3 - add a new case: " + "\n");
+                out.flush();
+                boolean isConnectionClosed = false;
+                while (!isConnectionClosed) {
+                    int messageType = in.read();
+                    switch (messageType) {
+                        case VIEW_STUDENT_INFO_BY_ID:
+                            viewStudentInfoById();
+                            break;
+                        case CHANGE_STUDENT_SPECIALIZATION:
+                            changeStudentSpecialization();
+                            break;
+                        case ADD_NEW_STUDENT:
+                            addNewStudent();
+                            break;
+                        default:
+                            isConnectionClosed = true;
                     }
-                   // String    word=in.readLine();
-                   // System.out.println(word);
-                } finally {
-                    System.out.println("dfjkhgkdf");
-                    clientSocket.close();
-                    in.close();
-                    out.close();
                 }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             } finally {
-                System.out.println("Сервер закрыт!");
-                server.close();
+                clientSocket.close();
+                in.close();
+                out.close();
             }
-        } catch (IOException | TransformerException e) {
-            System.err.println(e);
+        } catch (ParserConfigurationException e) {
+            e.printStackTrace();
+        } catch (TransformerException e) {
+            e.printStackTrace();
+        } catch (SAXException e) {
+            e.printStackTrace();
+        } finally {
+            System.out.println("Сервер закрыт!");
+            server.close();
         }
+    }
+
+    private void viewStudentInfoById() throws IOException {
+        studentId = in.read();
+        answer = studentService.viewStudentById(studentId);
+
+        out.write(answer + "\n");
+        out.flush();
+    }
+
+    private void changeStudentSpecialization() throws IOException, TransformerException, SAXException, ParserConfigurationException {
+        studentId = in.read();
+        answer = studentService.viewStudentById(studentId);
+
+        out.write(answer + "\n");
+        out.flush();
+        studentSpecialization = in.readLine();
+        studentService.changeSpecialization(String.valueOf(studentId), studentSpecialization);
+        out.write("data changed" + "\n");
+        out.flush();
+    }
+
+    private void addNewStudent() throws IOException, TransformerException, SAXException, ParserConfigurationException, InterruptedException {
+        studentId = in.read();
+        studentName = in.readLine();
+        studentSpecialization = in.readLine();
+        studentService.addNewStudent(String.valueOf(studentId), studentName, studentSpecialization);
+        out.write("student add" + "\n");
+        out.flush();
     }
 }

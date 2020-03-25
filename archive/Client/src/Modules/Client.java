@@ -5,78 +5,48 @@ import java.net.Socket;
 
 
 public class Client {
-    private static Socket clientSocket; //сокет для общения
-    private static BufferedReader reader; // нам нужен ридер читающий с консоли, иначе как
-    // мы узнаем что хочет сказать клиент?
-    private static BufferedReader in; // поток чтения из сокета
-    private static BufferedWriter out; // поток записи в сокет
+    private static Socket clientSocket;
+    private static BufferedReader reader;
+    private static BufferedReader in;
+    private static BufferedWriter out;
     private String answer;
-    private int Id;
-    private String Name;
-    private String Specialization;
+    private int studentId;
+    private String studentName;
+    private final int VIEW_STUDENT_INFO_BY_ID = 1;
+    private final int CHANGE_STUDENT_SPECIALIZATION = 2;
+    private final int ADD_NEW_STUDENT = 3;
+    private String studentSpecialization;
+
     public Client() throws IOException {
+        clientSocket = new Socket("localhost", 4004);
+        reader = new BufferedReader(new InputStreamReader(System.in));
+        in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+        out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+    }
+
+    public void runClient() {
         try {
             try {
-                // адрес - локальный хост, порт - 4004, такой же как у сервера
-                clientSocket = new Socket("localhost", 4004); // этой строкой мы запрашиваем
-                //  у сервера доступ на соединение
-                reader = new BufferedReader(new InputStreamReader(System.in));
-                // читать соообщения с сервера
-                in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                // писать туда же
-                out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
                 System.out.println("connected:");
                 String serverWord = in.readLine(); // ждём, что скажет сервер
                 System.out.println(serverWord); // получив - выводим на экран
                 int task = Integer.parseInt(reader.readLine());
                 out.write(task);
                 out.flush();
-                switch (task){
-                    case(1):
-                        System.out.println("enter the id student");
-                         Id = Integer.parseInt(reader.readLine());
-                        out.write(Id);
-                        out.flush();
-                        answer = in.readLine();
-                        System.out.println(answer);
+                switch (task) {
+                    case VIEW_STUDENT_INFO_BY_ID:
+                        viewStudentInfoById();
                         break;
-                    case(2):
-                        System.out.println("enter the id student");
-                        Id = Integer.parseInt(reader.readLine());
-                        out.write(Id);
-                        out.flush();
-                        answer = in.readLine();
-                        System.out.println("you choose " + answer);
-                        System.out.println(" enter new specialization");
-                        String specialization = reader.readLine();
-                        out.write(specialization+"\n");
-                        out.flush();
-                        answer = in.readLine();
-                        System.out.println(answer);
+                    case CHANGE_STUDENT_SPECIALIZATION:
+                        changeStudentSpecialization();
                         break;
-                    case(3):
-                        System.out.println("enter the id student");
-                       String Idd = reader.readLine();
-                        out.write(Idd+"\n");
-                        out.flush();
-                       System.out.println("enter the name student");
-                        Name = reader.readLine();
-                        out.write(Name);
-                        out.flush();
-                      /*   System.out.println("enter the specialization student");
-                        Specialization = reader.readLine();
-                        out.write(Specialization);
-                        out.flush();*/
-                        answer = in.readLine();
-                        System.out.println(answer);
+                    case ADD_NEW_STUDENT:
+                        addNewStudent();
                     default:
                         break;
                 }
-             //   System.out.println(word);
-             //   out.write(word);
-              //  out.flush();
 
-            } finally { // в любом случае необходимо закрыть сокет и потоки
+            } finally {
                 System.out.println("Клиент был закрыт...");
                 clientSocket.close();
                 in.close();
@@ -86,4 +56,49 @@ public class Client {
             System.err.println(e);
         }
     }
+
+    private void viewStudentInfoById() throws IOException {
+        System.out.println("enter the id student");
+        studentId = Integer.parseInt(reader.readLine());
+
+        out.write(studentId);
+        out.flush();
+        answer = in.readLine();
+        System.out.println(answer);
+    }
+
+    private void changeStudentSpecialization() throws IOException {
+        System.out.println("enter the id student");
+        studentId = Integer.parseInt(reader.readLine());
+
+        out.write(studentId);
+        out.flush();
+        answer = in.readLine();
+
+        System.out.println("you choose " + answer);
+        System.out.println("enter new specialization");
+        String specialization = reader.readLine();
+        out.write(specialization + "\n");
+        out.flush();
+        answer = in.readLine();
+        System.out.println(answer);
+    }
+
+    private void addNewStudent() throws IOException {
+        System.out.println("enter the id student");
+        studentId = Integer.parseInt(reader.readLine());
+        out.write(studentId + "\n");
+        out.flush();
+        System.out.println("enter the name student");
+        studentName = reader.readLine();
+        out.write(studentName + "\n");
+        out.flush();
+        System.out.println("enter the name specialization");
+        studentSpecialization = reader.readLine();
+        out.write(studentName + "\n");
+        out.flush();
+        answer = in.readLine();
+        System.out.println(answer);
+    }
+
 }

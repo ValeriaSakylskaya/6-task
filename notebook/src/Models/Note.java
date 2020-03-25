@@ -5,47 +5,48 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class Note {
-    private int Id;
-    private String Theme;
-    private Date CreatedAt;
-    private String Email;
-    private String Message;
+    private int id;
+    private String theme;
+    private Date createdDate;
+    private String email;
+    private String message;
     private DateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-    public Note (int Id, String theme, Date createdAt, String email, String message){
-        this.Id = Id;
-        this.Theme = theme;
-        this.CreatedAt = createdAt;
-        this.Email = email;
-        this.Message = message;
+
+    public Note(int Id, String theme, Date createdDate, String email, String message) {
+        this.id = Id;
+        this.theme = theme;
+        this.createdDate = createdDate;
+        this.email = email;
+        this.message = message;
     }
 
     public String getMessage() {
-        return Message;
+        return message;
     }
 
-    public Date getCreatedAt() {
-        return CreatedAt;
+    public Date getCreatedDate() {
+        return createdDate;
     }
 
     public String getTheme() {
-        return Theme;
+        return theme;
     }
 
     public int getId() {
-        return Id;
+        return id;
     }
 
     public String getEmail() {
-        return Email;
+        return email;
     }
 
     @Override
-    public String toString(){
+    public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append(" Note - " + Id + " at the " + format.format(CreatedAt) + "\n");
-        builder.append("Theme: " + Theme + "\n");
-        builder.append("Email: " + Email + "\n");
-        builder.append("Message: " + Message);
+        builder.append(" Note - " + id + " at the " + format.format(createdDate) + "\n");
+        builder.append("Theme: " + theme + "\n");
+        builder.append("Email: " + email + "\n");
+        builder.append("Message: " + message);
         return builder.toString();
     }
 }

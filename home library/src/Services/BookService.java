@@ -69,6 +69,7 @@ public class BookService {
             }
             reader.close();
             fr.close();
+            System.out.println("Welcome to library");
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
