@@ -28,10 +28,10 @@ public class Server {
         server = new ServerSocket(4004);
     }
 
-    public void runServer() throws IOException {
+    public void run() throws IOException {
         try {
-            System.out.println("Сервер запущен!");
-            studentService.loadFromXml();
+            System.out.println("Server is running...");
+            studentService.loadStudents();
             clientSocket = server.accept();
             try {
                 in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -69,7 +69,7 @@ public class Server {
         } catch (SAXException e) {
             e.printStackTrace();
         } finally {
-            System.out.println("Сервер закрыт!");
+            System.out.println("Server closed!");
             server.close();
         }
     }
@@ -84,10 +84,6 @@ public class Server {
 
     private void changeStudentSpecialization() throws IOException, TransformerException, SAXException, ParserConfigurationException {
         studentId = in.read();
-        answer = studentService.viewStudentById(studentId);
-
-        out.write(answer + "\n");
-        out.flush();
         studentSpecialization = in.readLine();
         studentService.changeSpecialization(String.valueOf(studentId), studentSpecialization);
         out.write("data changed" + "\n");
@@ -99,7 +95,7 @@ public class Server {
         studentName = in.readLine();
         studentSpecialization = in.readLine();
         studentService.addNewStudent(String.valueOf(studentId), studentName, studentSpecialization);
-        out.write("student add" + "\n");
+        out.write("student added" + "\n");
         out.flush();
     }
 }

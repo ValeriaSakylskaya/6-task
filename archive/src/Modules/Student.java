@@ -1,30 +1,30 @@
 package Modules;
 
 public class Student {
-    private int studentId;
-    private String nameStudent;
-    private String studentSpecialization;
+    private int id;
+    private String name;
+    private String specialization;
 
-    public Student(int studentId, String nameStudent, String studentSpecialization) {
-        this.studentId = studentId;
-        this.nameStudent = nameStudent;
-        this.studentSpecialization = studentSpecialization;
+    public Student(int id, String name, String specialization) {
+        this.id = id;
+        this.name = name;
+        this.specialization = specialization;
     }
 
-    public int getStudentId() {
-        return studentId;
+    public int getId() {
+        return id;
     }
 
-    public String getStudentSpecialization() {
-        return studentSpecialization;
+    public String getSpecialization() {
+        return specialization;
     }
 
-    public void setNameStudent(String nameStudent) {
-        this.nameStudent = nameStudent;
+    public void setName(String name) {
+        this.name = name;
     }
 
     @Override
     public String toString() {
-        return nameStudent + " " + studentSpecialization;
+        return name + " " + specialization;
     }
 }

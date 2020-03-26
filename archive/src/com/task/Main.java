@@ -10,6 +10,6 @@ public class Main {
 
     public static void main(String[] args) throws IOException, ParserConfigurationException, SAXException {
         Server server = new Server();
-        server.runServer();
+        server.run();
     }
 }

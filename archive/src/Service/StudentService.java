@@ -23,60 +23,58 @@ import java.util.List;
 import org.w3c.dom.Element;
 
 public class StudentService {
-    private List<Student> students = new ArrayList<Student>();
-    private final String pathName = "I:\\prj\\repos\\6-task\\archive\\file.xml";
+    private List<Student> studentList = new ArrayList<Student>();
+    private final String studentsSourcePath = "I:\\prj\\repos\\6-task\\archive\\file.xml";
 
     public StudentService() throws ParserConfigurationException, SAXException, IOException {
 
     }
 
-    public void loadFromXml() throws IOException, SAXException, ParserConfigurationException {
+    public void loadStudents() throws IOException, SAXException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.parse(new File(pathName));
+        Document document = builder.parse(new File(studentsSourcePath));
         NodeList studentElements = document.getDocumentElement().getElementsByTagName("student");
         for (int i = 0; i < studentElements.getLength(); i++) {
             Node student = studentElements.item(i);
             NamedNodeMap attributes = student.getAttributes();
-            students.add(new Student(Integer.parseInt(attributes.getNamedItem("id").getNodeValue()),
+            studentList.add(new Student(Integer.parseInt(attributes.getNamedItem("id").getNodeValue()),
                     attributes.getNamedItem("nameStudent").getNodeValue(),
                     attributes.getNamedItem("Specialization").getNodeValue()));
         }
     }
 
     public void viewStudent() {
-        for (Student student : students) {
+        for (Student student : studentList)
             System.out.println(student);
-        }
     }
 
     public String viewStudentById(int id) {
         StringBuilder builder = new StringBuilder();
-        for (Student student : students) {
-            if (student.getStudentId() == id) {
+        for (Student student : studentList) {
+            if (student.getId() == id)
                 builder.append(student.toString());
-            }
         }
 
         return builder.toString();
     }
 
-    public void changeSpecialization(String id, String specialization) throws ParserConfigurationException, IOException, SAXException, TransformerException {
+    public void changeSpecialization(String studentId, String specialization) throws ParserConfigurationException, IOException, SAXException, TransformerException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.parse(new File(pathName));
+        Document document = builder.parse(new File(studentsSourcePath));
         NodeList studentElements = document.getDocumentElement().getElementsByTagName("student");
         for (int i = 0; i < studentElements.getLength(); i++) {
             Node student = studentElements.item(i);
             NamedNodeMap attributes = student.getAttributes();
-            if (attributes.getNamedItem("id").getNodeValue().equals(id)) {
+            if (attributes.getNamedItem("id").getNodeValue().equals(studentId)) {
                 Node specializationNode = attributes.getNamedItem("Specialization");
                 specializationNode.setTextContent(specialization);
             }
         }
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         DOMSource source = new DOMSource(document);
-        StreamResult result = new StreamResult(new File(pathName));
+        StreamResult result = new StreamResult(new File(studentsSourcePath));
         transformer.transform(source, result);
         System.out.println("CHANGE SAVE");
     }
@@ -84,16 +82,16 @@ public class StudentService {
     public void addNewStudent(String id, String name, String specialization) throws ParserConfigurationException, IOException, SAXException, TransformerException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.parse(new File(pathName));
-        Node students = document.getElementsByTagName("students").item(0);
-        Element student = document.createElement("student");
-        student.setAttribute("id", id);
-        student.setAttribute("Specialization", specialization);
-        student.setAttribute("nameStudent", name);
-        students.appendChild(student);
+        Document document = builder.parse(new File(studentsSourcePath));
+        Node studentsNode = document.getElementsByTagName("students").item(0);
+        Element studentElement = document.createElement("student");
+        studentElement.setAttribute("id", id);
+        studentElement.setAttribute("Specialization", specialization);
+        studentElement.setAttribute("nameStudent", name);
+        studentsNode.appendChild(studentElement);
         Transformer transformer = TransformerFactory.newInstance().newTransformer();
         DOMSource source = new DOMSource(document);
-        StreamResult result = new StreamResult(new File(pathName));
+        StreamResult result = new StreamResult(new File(studentsSourcePath));
         transformer.transform(source, result);
         System.out.println("CHANGE SAVE");
     }

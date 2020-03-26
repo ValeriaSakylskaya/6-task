@@ -24,7 +24,7 @@ public class Client {
         out = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
     }
 
-    public void runClient() {
+    public void run() {
         try {
             try {
                 System.out.println("connected:");
@@ -47,7 +47,7 @@ public class Client {
                 }
 
             } finally {
-                System.out.println("Клиент был закрыт...");
+                System.out.println("Client was closed...");
                 clientSocket.close();
                 in.close();
                 out.close();
@@ -58,9 +58,8 @@ public class Client {
     }
 
     private void viewStudentInfoById() throws IOException {
-        System.out.println("enter the id student");
+        System.out.println("enter student id");
         studentId = Integer.parseInt(reader.readLine());
-
         out.write(studentId);
         out.flush();
         answer = in.readLine();
@@ -68,14 +67,10 @@ public class Client {
     }
 
     private void changeStudentSpecialization() throws IOException {
-        System.out.println("enter the id student");
+        System.out.println("enter student id");
         studentId = Integer.parseInt(reader.readLine());
-
-        out.write(studentId);
+        out.write(studentId + "\n");
         out.flush();
-        answer = in.readLine();
-
-        System.out.println("you choose " + answer);
         System.out.println("enter new specialization");
         String specialization = reader.readLine();
         out.write(specialization + "\n");
@@ -85,15 +80,15 @@ public class Client {
     }
 
     private void addNewStudent() throws IOException {
-        System.out.println("enter the id student");
+        System.out.println("enter student id");
         studentId = Integer.parseInt(reader.readLine());
         out.write(studentId + "\n");
         out.flush();
-        System.out.println("enter the name student");
+        System.out.println("enter student name");
         studentName = reader.readLine();
         out.write(studentName + "\n");
         out.flush();
-        System.out.println("enter the name specialization");
+        System.out.println("enter specialization name");
         studentSpecialization = reader.readLine();
         out.write(studentName + "\n");
         out.flush();
